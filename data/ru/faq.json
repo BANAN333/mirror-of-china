@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "language": "ru",
+    "university": "RUT_MIIT",
+    "last_updated": "2026-01-01",
+    "source_of_truth": "https://example.invalid/rut-miit"
+  },
+  "items": [
+    {
+      "id": "rut-miit.admission.international.0001",
+      "category": "admission",
+      "question": "ТЕСТ: Как подать документы иностранному абитуриенту?",
+      "answer": "ТЕСТ: Это демонстрационный ответ. Реальный текст будет взят из официального источника и проверен.",
+      "source": {
+        "url": "https://example.invalid/rut-miit/admission/international",
+        "title": "ТЕСТ: Приём иностранных граждан",
+        "type": "official_site"
+      },
+      "last_verified": "2026-01-01",
+      "status": "draft",
+      "notes": "ТЕСТОВАЯ ЗАПИСЬ. Не является фактом о РУТ."
+    }
+  ]
+}

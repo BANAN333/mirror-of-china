@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "language": "zh",
+    "university": "RUT_MIIT",
+    "last_updated": "2026-01-01",
+    "source_of_truth": "https://example.invalid/rut-miit"
+  },
+  "items": [
+    {
+      "id": "rut-miit.admission.international.0001",
+      "category": "admission",
+      "question": "测试：外国申请人如何提交材料？",
+      "answer": "测试：这是演示答案。正式文本将取自官方来源并经过核验。",
+      "source": {
+        "url": "https://example.invalid/rut-miit/admission/international",
+        "title": "测试：外国公民招生",
+        "type": "official_site"
+      },
+      "last_verified": "2026-01-01",
+      "status": "draft",
+      "notes": "测试记录。并非关于RUT的事实。"
+    }
+  ]
+}
