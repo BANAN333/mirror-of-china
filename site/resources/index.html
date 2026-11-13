@@ -41,8 +41,32 @@ body>.mc-site-nav + .wrap > nav{display:none!important}
 @media(max-width:900px){.mc-nav-inner{gap:8px}.mc-nav-actions{margin-left:auto}.mc-links{order:3;flex-basis:100%;overflow-x:auto;flex-wrap:nowrap;padding:2px 0 4px}}
 @media(max-width:540px){.mc-nav-actions{gap:5px}.mc-official,.mc-lang{font-size:11px;padding:8px 9px}.mc-home-hub .mc-portal-card{min-height:0}}
 
-</style><!-- MIRROR_PORTAL_CSS_END --></head><body><!-- MIRROR_UNIFIED_NAV_BEGIN --><nav class="mc-site-nav" aria-label="Навигация по сайту"><div class="mc-nav-inner"><a class="mc-logo" href="../index.html"><span class="mc-logo-mark">中</span>Зеркало Поднебесной</a><div class="mc-links"><a href="../index.html">Главная</a><a href="../ru/index.html">Все FAQ</a><a href="../ru/guides/index.html">Помощник поступления</a><a href="../ru/checklist/index.html">Мой план</a><a href="../ru/resources/index.html" class="mc-current" aria-current="page">Площадки</a></div><div class="mc-nav-actions"><a class="mc-lang" href="../zh/resources/index.html" lang="zh">中文</a><a class="mc-official" href="https://www.rut-miit.ru/" target="_blank" rel="noopener noreferrer">Сайт РУТ ↗</a></div></div></nav><!-- MIRROR_UNIFIED_NAV_END -->
+</style><!-- MIRROR_PORTAL_CSS_END --></head><body><!-- MIRROR_UNIFIED_NAV_BEGIN --><nav class="mc-site-nav" aria-label="Навигация по сайту"><div class="mc-nav-inner"><a class="mc-logo" href="../index.html"><span class="mc-logo-mark">中</span>Зеркало Поднебесной</a><div class="mc-links"><a href="../index.html">Главная</a><a href="../ru/index.html">Все FAQ</a><a href="../ru/guides/index.html">Помощник поступления</a><a href="../ru/checklist/index.html">Мой план</a><a href="../ru/resources/index.html" class="mc-current" aria-current="page">Площадки</a></div><div class="mc-nav-actions"><a class="mc-lang" href="../zh/resources/index.html" lang="zh">中文</a><a class="mc-official" href="https://www.rut-miit.ru/" target="_blank" rel="noopener noreferrer">Сайт РУТ ↗</a></div></div></nav><script data-mirror-language="1">(function(){var q=new URLSearchParams(location.search).get("lang");var l=(q==="ru"||q==="zh")?q:"ru";try{sessionStorage.setItem("mirror-site-language",l)}catch(e){}})();</script><!-- MIRROR_UNIFIED_NAV_END -->
 <p><a href="../ru/resources/index.html">Площадки проекта</a> · <a href="../zh/resources/index.html">项目发布平台</a></p>
-<script>(function(){var l=new URLSearchParams(location.search).get('lang')==='zh'?'zh':'ru';
-location.replace('../'+l+'/resources/index.html'+location.hash)})();</script>
+<script>(function(){
+// First preference: explicit URL query string (?lang=zh or ?lang=ru).
+var query = new URLSearchParams(location.search).get('lang');
+var lang = query === 'zh' || query === 'ru' ? query : null;
+// Second: the page from which the visitor opened the legacy link.
+if (!lang && document.referrer) {
+  try {
+    var from = new URL(document.referrer);
+    if (from.origin === location.origin) {
+      var fromQuery = from.searchParams.get('lang');
+      if (fromQuery === 'zh' || fromQuery === 'ru') lang = fromQuery;
+      else if (/\/zh(?:\/|$)/.test(from.pathname)) lang = 'zh';
+      else if (/\/ru(?:\/|$)/.test(from.pathname)) lang = 'ru';
+    }
+  } catch (e) { /* No referrer available */ }
+}
+// Third: remembered choice from the same browser tab.
+if (!lang) {
+  try {
+    var saved = sessionStorage.getItem('mirror-site-language');
+    if (saved === 'zh' || saved === 'ru') lang = saved;
+  } catch (e) { /* Storage may be blocked */ }
+}
+if (!lang) lang = 'ru';
+location.replace('../' + lang + '/resources/index.html' + location.hash);
+})();</script>
 </body></html>

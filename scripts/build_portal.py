@@ -231,8 +231,32 @@ def resource_page():
 <meta http-equiv="refresh" content="2; url=../ru/resources/index.html">
 <title>Площадки / 发布平台</title></head><body>
 <p><a href="../ru/resources/index.html">Площадки проекта</a> · <a href="../zh/resources/index.html">项目发布平台</a></p>
-<script>(function(){var l=new URLSearchParams(location.search).get('lang')==='zh'?'zh':'ru';
-location.replace('../'+l+'/resources/index.html'+location.hash)})();</script>
+<script>(function(){
+// First preference: explicit URL query string (?lang=zh or ?lang=ru).
+var query = new URLSearchParams(location.search).get('lang');
+var lang = query === 'zh' || query === 'ru' ? query : null;
+// Second: the page from which the visitor opened the legacy link.
+if (!lang && document.referrer) {
+  try {
+    var from = new URL(document.referrer);
+    if (from.origin === location.origin) {
+      var fromQuery = from.searchParams.get('lang');
+      if (fromQuery === 'zh' || fromQuery === 'ru') lang = fromQuery;
+      else if (/\/zh(?:\/|$)/.test(from.pathname)) lang = 'zh';
+      else if (/\/ru(?:\/|$)/.test(from.pathname)) lang = 'ru';
+    }
+  } catch (e) { /* No referrer available */ }
+}
+// Third: remembered choice from the same browser tab.
+if (!lang) {
+  try {
+    var saved = sessionStorage.getItem('mirror-site-language');
+    if (saved === 'zh' || saved === 'ru') lang = saved;
+  } catch (e) { /* Storage may be blocked */ }
+}
+if (!lang) lang = 'ru';
+location.replace('../' + lang + '/resources/index.html' + location.hash);
+})();</script>
 </body></html>''', encoding='utf-8')
 
 
@@ -300,7 +324,12 @@ def nav(page: Path) -> str:
             f'<div class="mc-nav-actions">'
             f'<a class="mc-lang" href="{esc(counterpart_href)}" lang="{other_lang}">{switch}</a>'
             f'<a class="mc-official" href="https://www.rut-miit.ru/" target="_blank" rel="noopener noreferrer">'
-            f'{esc(official_label)}</a></div></div></nav>{END}')
+            f'{esc(official_label)}</a></div></div></nav>'
+            f'<script data-mirror-language="1">(function(){{'
+            f'var q=new URLSearchParams(location.search).get("lang");'
+            f'var l=(q==="ru"||q==="zh")?q:"{language}";'
+            f'try{{sessionStorage.setItem("mirror-site-language",l)}}catch(e){{}}'
+            f'}})();</script>{END}')
 
 
 def verified_count(lang: str) -> int:
