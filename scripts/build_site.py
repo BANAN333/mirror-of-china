@@ -450,3 +450,13 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # MIRROR_UNIFIED_BUILD_PIPELINE_V1
+    # Keep all additional pages, navigation, and sitemap URLs when regenerating the site.
+    import subprocess as _mirror_subprocess
+    import sys as _mirror_sys
+    for _mirror_addon in ('build_distribution.py', 'build_guides.py', 'build_checklist.py', 'build_portal.py', 'build_tools.py', 'build_smart_tools.py', 'build_admissions_v5.py'):
+        _mirror_path = ROOT / 'scripts' / _mirror_addon
+        if not _mirror_path.is_file():
+            raise SystemExit(f'Нужный генератор отсутствует: {_mirror_path}')
+        print(f'>>> Полная сборка: {_mirror_addon}', flush=True)
+        _mirror_subprocess.run([_mirror_sys.executable, str(_mirror_path)], cwd=ROOT, check=True)

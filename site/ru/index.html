@@ -84,8 +84,48 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #f6
 @media (max-width:560px) { .wrap{width:min(100% - 28px,1100px)} .nav-inner{align-items:flex-start} .brand{font-size:14px} .nav-actions{justify-content:flex-end} .nav-actions a{font-size:11px;padding:8px} .hero h1{font-size:31px} .hero p{font-size:14px} .toolbar{padding:13px} .faq-card{padding:20px} .nav-actions .official{display:none} }
 @media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto} }
 </style>
-</head>
-<body>
+<!-- MIRROR_PORTAL_CSS_BEGIN --><style>
+.mc-site-nav{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1px solid #dbe5f0;box-shadow:0 4px 20px #172e4a13;font-family:system-ui,-apple-system,'Segoe UI','Noto Sans SC',sans-serif;color:#172d49}
+.mc-nav-inner{max-width:1160px;margin:auto;min-height:67px;padding:9px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px}
+.mc-logo{font-weight:850;font-size:15px;color:#15355e;text-decoration:none;display:flex;align-items:center;gap:9px;white-space:nowrap}
+.mc-logo-mark{display:grid;place-items:center;border-radius:9px;background:#143e6b;color:#fff;font-size:13px;width:29px;height:29px}
+.mc-links{display:flex;align-items:center;gap:5px;flex-wrap:wrap;flex:1}
+.mc-links a{color:#3a5576;text-decoration:none;font-size:13px;font-weight:700;padding:9px 11px;border-radius:9px;white-space:nowrap}
+.mc-links a:hover{background:#eaf2fc;color:#163e74;text-decoration:none}
+.mc-links a.mc-current{background:#e8f1ff;color:#124b93}
+.mc-lang{margin-left:auto;white-space:nowrap;text-decoration:none;color:#15528a;border:1px solid #cdddec;border-radius:99px;padding:8px 12px;font-size:12px;font-weight:800}
+.mc-site-nav a:focus-visible,.mc-portal-hub a:focus-visible{outline:3px solid #ebaa34;outline-offset:2px}
+body>.topbar{display:none!important}
+body>.mc-site-nav + .wrap > nav{display:none!important}
+.mc-portal-hub{margin:0 auto 24px;max-width:1100px;font-family:system-ui,-apple-system,'Segoe UI','Noto Sans SC',sans-serif;color:#173050}
+.mc-portal-hub h2{font-size:clamp(20px,3vw,28px);margin:0 0 6px;color:#173050}
+.mc-portal-hub p{margin:0 0 16px;color:#64768e;font-size:14px;line-height:1.6}
+.mc-portal-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mc-portal-card{display:block;background:#fff;border:1px solid #d8e4f1;border-radius:14px;padding:18px 18px;color:#173d70;text-decoration:none;box-shadow:0 6px 25px #1b3f610a}
+.mc-portal-card:hover{border-color:#8aafe3;background:#f8fbff;text-decoration:none}
+.mc-portal-card strong{font-size:16px;display:block;margin-bottom:6px}
+.mc-portal-card small{font-size:12px;display:block;line-height:1.6;color:#536c87}
+.mc-home-hub{margin:21px 0 10px;text-align:left}
+.mc-home-hub h2{color:#fff;font-size:17px;margin:0 0 12px}
+.mc-home-hub .mc-portal-card{color:#173d70}
+@media(max-width:720px){.mc-nav-inner{padding:11px 13px;gap:8px}.mc-links{order:3;flex-basis:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.mc-links a{font-size:12px}.mc-lang{margin-left:auto}.mc-portal-cards{grid-template-columns:1fr}.mc-portal-card{padding:15px}}
+.mc-nav-actions{margin-left:auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.mc-nav-actions .mc-lang{margin-left:0}
+.mc-official{white-space:nowrap;text-decoration:none;color:#fff;background:#194c82;border:1px solid #194c82;border-radius:99px;padding:9px 13px;font-size:12px;font-weight:800}
+.mc-official:hover{background:#12385f;color:#fff}
+.mc-home-hub{margin-top:28px;margin-bottom:25px;text-align:center}
+.mc-home-hub h2{color:#fff;font-size:clamp(22px,3vw,29px)}
+.mc-home-hub p{color:#cfdef2;margin-bottom:20px}
+.mc-home-hub .mc-portal-cards{text-align:left}
+.mc-home-hub .mc-portal-card{min-height:116px;transition:transform .15s,box-shadow .15s}
+.mc-home-hub .mc-portal-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px #0519323b}
+.home-card{width:min(980px,100%) !important}
+.home .mc-disclaimer{font-size:12px;color:#bed0e7;margin-top:17px}
+@media(max-width:900px){.mc-nav-inner{gap:8px}.mc-nav-actions{margin-left:auto}.mc-links{order:3;flex-basis:100%;overflow-x:auto;flex-wrap:nowrap;padding:2px 0 4px}}
+@media(max-width:540px){.mc-nav-actions{gap:5px}.mc-official,.mc-lang{font-size:11px;padding:8px 9px}.mc-home-hub .mc-portal-card{min-height:0}}
+
+</style><!-- MIRROR_PORTAL_CSS_END --></head>
+<body><!-- MIRROR_UNIFIED_NAV_BEGIN --><nav class="mc-site-nav" aria-label="Навигация по сайту"><div class="mc-nav-inner"><a class="mc-logo" href="../index.html"><span class="mc-logo-mark">中</span>Зеркало Поднебесной</a><div class="mc-links"><a href="../index.html">Главная</a><a href="index.html" class="mc-current" aria-current="page">Все FAQ</a><a href="guides/index.html">Помощник поступления</a><a href="checklist/index.html">Мой план</a><a href="resources/index.html">Площадки</a></div><div class="mc-nav-actions"><a class="mc-lang" href="../zh/index.html" lang="zh">中文</a><a class="mc-official" href="https://www.rut-miit.ru/" target="_blank" rel="noopener noreferrer">Сайт РУТ ↗</a></div></div></nav><!-- MIRROR_UNIFIED_NAV_END -->
   <header class="topbar">
     <div class="wrap nav-inner">
       <a class="brand" href="../index.html" aria-label="Зеркало Поднебесной"><span class="logo" aria-hidden="true">中</span><span>Зеркало Поднебесной<small>Mirror of China</small></span></a>
@@ -99,7 +139,7 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #f6
     <div><div class="eyebrow">РОССИЙСКИЙ УНИВЕРСИТЕТ ТРАНСПОРТА · МОСКВА</div><h1>Поступление в РУТ (МИИТ) — без лишних вопросов</h1><p>Ответы об учёбе в России для иностранных абитуриентов. На русском и китайском, с прямыми ссылками на документы университета.</p></div>
     <div class="hero-panel"><strong>24</strong><span>ответа на каждом языке</span><em>RU / ZH</em></div>
   </div></section>
-  <main class="wrap body-content" id="content">
+  <main class="wrap body-content" id="content"><!-- MIRROR_PORTAL_HUB_BEGIN --><section class="mc-portal-hub" aria-label="С чего начать"><h2>С чего начать</h2><p>Пройди анкету, получи персональный план действий и уточняй детали в FAQ.</p><div class="mc-portal-cards"><a class="mc-portal-card" href="guides/index.html"><strong>Помощник поступления</strong><small>Выбери условия поступления и программу — получи персональный маршрут</small></a><a class="mc-portal-card" href="checklist/index.html"><strong>Мой план подготовки</strong><small>Документы, экзамены, приезд: отслеживай конкретные действия</small></a><a class="mc-portal-card" href="index.html"><strong>База знаний: 24 FAQ</strong><small>Ответы на вопросы о РУТ со ссылками на официальные источники</small></a></div></section><!-- MIRROR_PORTAL_HUB_END -->
     <div class="section-head"><div><h2>Найди нужный ответ</h2><p>Выбери раздел или введи запрос. Все ответы доступны для чтения и без поиска.</p></div></div>
     <div class="toolbar">
       <nav class="tabs" aria-label="FAQ categories"><button type="button" class="tab" data-section="faq" aria-pressed="true">Все вопросы</button>

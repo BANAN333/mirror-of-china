@@ -1,6 +1,6 @@
 # Open bilingual FAQ dataset / 开放问答数据
 
-- Generated: 2026-11-13
+- Generated: 2026-11-14
 - Paired RU/ZH FAQ: 24
 - `faq-ru.json`, `faq-zh.json`: {meta, items}. Record fields: `id`, `category`, `topic`, `question`, `answer`, `source` (url and title), `last_verified`, `status`.
 - `faq-pairs.json`: each ID paired with RU and ZH objects.
