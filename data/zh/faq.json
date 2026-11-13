@@ -3,7 +3,7 @@
     "schema_version": "1.0.0",
     "language": "zh",
     "university": "RUT_MIIT",
-    "last_updated": "2026-11-12",
+    "last_updated": "2026-11-13",
     "source_of_truth": "https://www.rut-miit.ru/page/120705"
   },
   "items": [
@@ -62,6 +62,76 @@
       "last_verified": "2026-11-12",
       "status": "verified",
       "notes": "草稿。历史时间线依据俄罗斯交通大学（РУТ（МИИТ））官方资料整理。发布前须对照原始资料核实日期和表述，检查中文译文，并确认俄文与中文记录完全同步。"
+    },
+    {
+      "id": "rut-miit.about_university.location.0001",
+      "category": "about_university",
+      "question": "俄罗斯交通大学（РУТ（МИИТ））的正式名称是什么？学校位于哪里？",
+      "answer": "学校的俄文法定全称为“Федеральное государственное автономное образовательное учреждение высшего образования «Российский университет транспорта»”（俄罗斯交通大学），简称“РУТ (МИИТ)”。学校位于俄罗斯莫斯科市，地址为Образцова街9号9栋（ул. Образцова, д. 9, стр. 9）。现场提交申请材料的招生办公室地址可能与学校地址不同。",
+      "source": {
+        "url": "https://rut-miit.ru/sveden/common",
+        "title": "学校基本信息",
+        "type": "official_site"
+      },
+      "last_verified": "2026-11-13",
+      "status": "verified",
+      "notes": "信息依据官网“基本信息”页面。招生办公室另见 https://rut-miit.ru/page/120705。官网不同页面的邮编不一致，因此此处不写邮编。"
+    },
+    {
+      "id": "rut-miit.education.programs.0001",
+      "category": "education",
+      "question": "俄罗斯交通大学开设哪些教育项目和培养层次？",
+      "answer": "俄罗斯交通大学（РУТ（МИИТ））开设中等职业教育和高等教育项目，涵盖交通运输、工程、信息技术和管理等领域。自2026年起，学校参与俄罗斯高等教育体系改革试点。新模式设有三个层次：基础高等教育（4至6年）、专业化高等教育（1至3年）和俄罗斯副博士研究生培养阶段（аспирантура，3至4年）。具体专业及招生条件应以学校官网最新的专业目录和招生规定为准。",
+      "source": {
+        "url": "https://rut-miit.ru/page/193592",
+        "title": "高等教育改革试点项目",
+        "type": "official_site"
+      },
+      "last_verified": "2026-11-13",
+      "status": "verified",
+      "notes": "2026年试点与新层次据官网试点专题；中等职业教育另见 https://rut-miit.ru/sveden/education/accreditation。没有声称传统培养层次已经全部取消。"
+    },
+    {
+      "id": "rut-miit.admission.documents.0001",
+      "category": "admission",
+      "question": "外国申请人报考俄罗斯交通大学需要准备哪些材料？",
+      "answer": "根据学校官网外国公民招生材料清单，申请人需准备身份证明及国籍证明（如护照）、学历证明及成绩附件，以及两张3×4厘米的哑光照片。如果证件没有俄语页面，还需提供经公证的俄语译本。视具体情况，可能还需要对学历文件进行领事认证或办理海牙附加证明书、提供签证复印件、移民卡（现场提交申请时需要，白俄罗斯公民除外）、居留登记证明及医疗保险。申请公费名额者须按规定提交同意录取声明，自费入学者须签订教育服务合同。提交材料前应核对当年最新招生要求。",
+      "source": {
+        "url": "https://rut-miit.ru/page/120705",
+        "title": "外国公民入学",
+        "type": "official_site"
+      },
+      "last_verified": "2026-11-13",
+      "status": "verified",
+      "notes": "来自官网2026年外国公民招生页面。根据国籍、申请方式及入境情况，附加材料可能不同；下一招生年度须重新核对。"
+    },
+    {
+      "id": "rut-miit.international.programs.0001",
+      "category": "international",
+      "question": "俄罗斯交通大学与中国高校有联合培养或双文凭项目吗？",
+      "answer": "有。根据俄罗斯交通大学国际交通交流学院（ИМТК）的官方介绍，该学院与中国高校合作开设两个教育项目。这些项目的学生在中国高校学习，并获得两份文凭。学院列出的中国合作伙伴包括北京联合大学和首都经济贸易大学。具体项目、招生条件及文凭授予要求应向学院进一步确认。",
+      "source": {
+        "url": "https://rut-miit.ru/depts/23579",
+        "title": "国际交通交流学院",
+        "type": "official_site"
+      },
+      "last_verified": "2026-11-13",
+      "status": "verified",
+      "notes": "学院页面明确提到两个对华合作项目和两份文凭；合作伙伴名单并不等于所有伙伴都参与双文凭项目。未引用2024年的历史人数。"
+    },
+    {
+      "id": "rut-miit.student_life.dormitories.0001",
+      "category": "student_life",
+      "question": "俄罗斯交通大学是否为包括国际学生在内的学生提供宿舍？",
+      "answer": "有。俄罗斯交通大学设有学生宿舍，学校官方《国际学生指南》介绍了宿舍入住流程。例如，2号学生宿舍位于莫斯科市Образцова街22号（ул. Образцова, д. 22）。办理入住时，学生需要通过个人账户获得入住通知（ордер），并按要求提交护照及俄罗斯交通大学校医院开具的健康证明等材料。学校设有宿舍并不代表每位学生都能自动获得床位；具体安排和空余床位应向学校确认。",
+      "source": {
+        "url": "https://navigator.rut-miit.ru/cmam",
+        "title": "俄罗斯交通大学国际学生指南",
+        "type": "official_site"
+      },
+      "last_verified": "2026-11-13",
+      "status": "verified",
+      "notes": "学校国际学生指南说明入住通知和所需材料；2号宿舍地址另见 https://rut-miit.ru/depts/13。不引用未经独立核实的容量、楼层和Wi-Fi细节；不保证所有学生都能获得床位。"
     }
   ]
 }
