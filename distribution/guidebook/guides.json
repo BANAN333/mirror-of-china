@@ -1,0 +1,55 @@
+[
+  {
+    "slug": "admissions",
+    "title": "中国学生申请俄罗斯交通大学（RUT/MIIT）：从选专业到录取的核查路线",
+    "description": "面向中国申请者的俄交大入学流程、2026年时间节点、入学考试与来源核查指南。",
+    "sources": [
+      "https://rut-miit.ru/admissions/",
+      "https://rut-miit.ru/page/120705",
+      "https://rut-miit.ru/admissions/office/94725",
+      "https://rut-miit.ru/page/171057",
+      "https://rut-miit.ru/content/%D0%9F%D0%9F%D0%92%D0%9E2026.pdf?id_wm=1048954"
+    ]
+  },
+  {
+    "slug": "documents",
+    "title": "申请俄罗斯交通大学需要哪些材料？中国学生的分阶段核对清单",
+    "description": "按入学申请、学历核查、抵俄与宿舍入住四个阶段区分俄罗斯交通大学材料要求。",
+    "sources": [
+      "https://rut-miit.ru/page/120705",
+      "https://rut-miit.ru/page/171057",
+      "https://navigator.rut-miit.ru/cmam"
+    ]
+  },
+  {
+    "slug": "programs",
+    "title": "俄罗斯交通大学有哪些专业？交通、IT与中俄合作项目怎么查",
+    "description": "解析RUT/MIIT的交通、信息技术和管理方向，以及2026年高等教育试点和对华合作。",
+    "sources": [
+      "https://rut-miit.ru/admissions/degrees",
+      "https://rut-miit.ru/sveden/education/programs",
+      "https://rut-miit.ru/page/193592",
+      "https://rut-miit.ru/depts/23579"
+    ]
+  },
+  {
+    "slug": "tuition",
+    "title": "俄罗斯交通大学学费如何查询？按专业、学期与年度核对费用",
+    "description": "以RUT/MIIT 2026年官方专业目录为例，说明学费查询、合同制与政府配额的区别。",
+    "sources": [
+      "https://rut-miit.ru/admissions/degrees",
+      "https://rut-miit.ru/page/120705",
+      "https://rut-miit.ru/admissions/"
+    ]
+  },
+  {
+    "slug": "life",
+    "title": "在莫斯科读俄罗斯交通大学：宿舍、报到、课表与生活准备",
+    "description": "根据RUT/MIIT国际学生导航整理宿舍申请、医学文件、缴费方式与课表查询。",
+    "sources": [
+      "https://navigator.rut-miit.ru/cmam",
+      "https://rut-miit.ru/depts/13",
+      "https://rut-miit.ru/admissions/"
+    ]
+  }
+]
