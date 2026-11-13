@@ -1,12 +1,24 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://banan333.github.io/mirror-of-china/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://banan333.github.io/mirror-of-china/ru/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://banan333.github.io/mirror-of-china/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://banan333.github.io/mirror-of-china/" />
   </url>
   <url>
     <loc>https://banan333.github.io/mirror-of-china/ru/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://banan333.github.io/mirror-of-china/ru/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://banan333.github.io/mirror-of-china/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://banan333.github.io/mirror-of-china/" />
   </url>
   <url>
     <loc>https://banan333.github.io/mirror-of-china/zh/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://banan333.github.io/mirror-of-china/ru/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://banan333.github.io/mirror-of-china/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://banan333.github.io/mirror-of-china/" />
   </url>
 </urlset>

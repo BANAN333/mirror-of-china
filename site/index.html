@@ -1,18 +1,90 @@
-﻿<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Зеркало Поднебесной | Mirror of China</title>
-</head>
-<body>
-  <main>
-    <h1>Зеркало Поднебесной</h1>
-    <p>Информация о Российском университете транспорта (РУТ (МИИТ))</p>
-    <nav>
-      <p><a href="./ru/">Русская версия</a></p>
-      <p><a href="./zh/">中文版 — 中文信息</a></p>
-    </nav>
-  </main>
-</body>
-</html>
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Зеркало Поднебесной — Mirror of China | RUT (MIIT)</title>
+<meta name="description" content="Двуязычная база знаний о Российском университете транспорта (РУТ МИИТ) для иностранных абитуриентов. 中文版与俄文版。">
+<meta name="robots" content="index,follow"><link rel="canonical" href="https://banan333.github.io/mirror-of-china/">
+<link rel="alternate" hreflang="ru" href="https://banan333.github.io/mirror-of-china/ru/">
+<link rel="alternate" hreflang="zh-CN" href="https://banan333.github.io/mirror-of-china/zh/">
+<link rel="alternate" hreflang="x-default" href="https://banan333.github.io/mirror-of-china/">
+<meta name="theme-color" content="#0c2344">
+<style>
+:root { color-scheme: light; --ink:#12243e; --muted:#5d7189; --navy:#0c2344; --blue:#235ed5; --pale:#f5f8ff; --border:#dce5f0; --white:#fff; --gold:#fbc979; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; color:var(--ink); background:#f7f9fc; font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif; }
+a { color:#1654bb; text-underline-offset:3px; }
+a:hover { text-decoration-thickness:2px; }
+button,input { font:inherit; }
+.sr-label { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #f6a73c; outline-offset:3px; }
+.wrap { width:min(1100px, calc(100% - 40px)); margin-inline:auto; }
+.topbar { background:var(--white); border-bottom:1px solid var(--border); }
+.nav-inner { display:flex; justify-content:space-between; align-items:center; gap:22px; padding:16px 0; }
+.brand { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--ink); font-size:18px; font-weight:800; }
+.brand small { display:block; color:var(--muted); font-weight:500; font-size:11px; letter-spacing:.06em; text-transform:uppercase; margin-top:2px; }
+.logo { width:40px; height:40px; border-radius:12px; background:var(--navy); display:grid; place-items:center; color:#fff; font-weight:900; box-shadow:inset -6px -6px 0 #315f9e; }
+.nav-actions { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+.nav-actions a { font-size:13px; font-weight:700; padding:10px 13px; border:1px solid var(--border); border-radius:999px; text-decoration:none; color:#1d406e; }
+.nav-actions .switch { background:#eff5ff; border-color:#d5e4fd; }
+.hero { background:radial-gradient(circle at 80% 5%,#244e87 0%,transparent 35%),linear-gradient(125deg,#0d2341,#133e72); overflow:hidden; color:#fff; }
+.hero-grid { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(200px,.6fr); align-items:center; gap:38px; padding:67px 0 76px; }
+.eyebrow { text-transform:uppercase; font-weight:800; font-size:11px; letter-spacing:.14em; color:#a9c9f6; }
+.hero h1 { font-size:clamp(30px,4.7vw,53px); line-height:1.12; letter-spacing:-.035em; max-width:690px; margin:17px 0 20px; }
+.hero p { max-width:670px; line-height:1.72; font-size:16px; color:#d7e6f9; margin:0; }
+.hero-panel { min-height:225px; border:1px solid #ffffff40; border-radius:24px; background:linear-gradient(145deg,#ffffff19,#ffffff0b); display:grid; align-content:center; justify-items:center; text-align:center; box-shadow:0 14px 50px #07162a25; }
+.hero-panel strong { font-size:75px; font-weight:850; letter-spacing:-.075em; line-height:1.2; }
+.hero-panel span { font-size:13px; color:#dfecff; margin-top:4px; }
+.hero-panel em { margin-top:22px; padding:7px 12px; font-style:normal; font-size:11px; letter-spacing:.09em; color:var(--navy); background:var(--gold); border-radius:99px; font-weight:800; }
+.body-content { padding:34px 0 66px; }
+.section-head { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:21px; }
+.section-head h2 { font-size:clamp(24px,3vw,31px); margin:0 0 8px; letter-spacing:-.025em; }
+.section-head p { margin:0; color:var(--muted); line-height:1.6; }
+.toolbar { background:#fff; border:1px solid var(--border); border-radius:18px; box-shadow:0 8px 24px #17315108; padding:18px; margin-bottom:21px; }
+.tabs { display:flex; gap:8px; overflow-x:auto; scrollbar-width:thin; padding-bottom:4px; margin-bottom:16px; }
+.tab { cursor:pointer; border:1px solid var(--border); border-radius:999px; background:#f9fbff; color:#334b6d; padding:10px 16px; white-space:nowrap; font-weight:700; font-size:13px; }
+.tab:hover { border-color:#8eafec; }
+.tab[aria-pressed="true"] { color:#fff; background:var(--navy); border-color:var(--navy); }
+.search-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.search-field { flex:1 1 300px; position:relative; }
+.search-field svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#6984a6; pointer-events:none; }
+.search-field input { display:block; width:100%; background:#fff; border:1px solid #c8d5e7; border-radius:11px; padding:14px 14px 14px 44px; min-height:47px; color:var(--ink); }
+.clear { cursor:pointer; border:0; background:transparent; color:#1e56ac; font-weight:700; padding:11px; }
+.result-count { font-size:13px; color:var(--muted); font-weight:600; margin:12px 4px 0; }
+.faq-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:17px; }
+.faq-card { position:relative; display:flex; flex-direction:column; background:#fff; border:1px solid var(--border); padding:25px 26px 22px; border-radius:16px; box-shadow:0 7px 23px #17315107; scroll-margin-top:15px; }
+.faq-card:target { outline:3px solid #f5c56a; }
+.faq-card[hidden] { display:none !important; }
+.faq-topline { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.topic { border-radius:99px; padding:6px 11px; font-size:11px; font-weight:800; color:#244d8a; background:#e9f2ff; }
+.topic-documents { color:#88601a; background:#fff2d6; }
+.topic-programs { color:#3d6a4b; background:#e8f8eb; }
+.topic-about { color:#704f9d; background:#f0eaff; }
+.item-number { font-variant-numeric:tabular-nums; color:#93a3b7; font-weight:800; font-size:12px; }
+.faq-card h2 { font-size:19px; letter-spacing:-.02em; line-height:1.43; margin:15px 0 11px; }
+.answer { white-space:pre-line; line-height:1.72; font-size:14px; color:#324762; margin:0 0 22px; flex:1; overflow-wrap:anywhere; }
+.card-bottom { border-top:1px solid #e7edf4; padding-top:14px; display:flex; flex-direction:column; gap:9px; font-size:12px; color:#566c86; }
+.source-line { overflow-wrap:anywhere; }
+.source-line a { font-weight:750; }
+.verified { color:#59728f; }
+.permalink { margin-top:11px; align-self:flex-start; color:#6a7f99; font-size:11px; text-decoration:none; }
+.permalink:hover { color:#174e99; }
+.empty { background:#fff; border:1px dashed #c0cfe4; border-radius:16px; color:#5d7189; text-align:center; padding:35px 20px; }
+.notice { margin-top:35px; background:#edf3fb; border:1px solid #d8e4f3; border-left:4px solid #3564a2; border-radius:12px; padding:21px 23px; }
+.notice h2 { margin:0 0 7px; font-size:16px; }
+.notice p { margin:0; color:#4e627d; font-size:13px; line-height:1.75; }
+.footer { border-top:1px solid var(--border); background:#fff; padding:24px 0; color:#687b91; font-size:13px; }
+.footer-inner { display:flex; gap:15px; justify-content:space-between; flex-wrap:wrap; }
+.footer a { color:#456a9e; }
+@media (max-width:800px) { .hero-grid{grid-template-columns:1fr;padding:50px 0 56px} .hero-panel{display:none} .faq-grid{grid-template-columns:1fr} }
+@media (max-width:560px) { .wrap{width:min(100% - 28px,1100px)} .nav-inner{align-items:flex-start} .brand{font-size:14px} .nav-actions{justify-content:flex-end} .nav-actions a{font-size:11px;padding:8px} .hero h1{font-size:31px} .hero p{font-size:14px} .toolbar{padding:13px} .faq-card{padding:20px} .nav-actions .official{display:none} }
+@media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto} }
+
+.home{min-height:75vh;display:grid;place-items:center;background:radial-gradient(circle at 70% 10%,#275287,#0d2341 60%);color:#fff;padding:45px 15px}
+.home-card{width:min(720px,100%);text-align:center}.home-card h1{font-size:clamp(38px,6vw,66px);letter-spacing:-.04em;margin:10px 0}.home-card p{line-height:1.65;color:#d7e6f9}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:32px 0}.choices a{display:block;text-align:left;background:#fff;color:#18375e;text-decoration:none;border-radius:16px;padding:24px;font-weight:800;font-size:20px}.choices a span{display:block;color:#647894;font-size:13px;font-weight:500;margin-top:9px}
+@media(max-width:560px){.choices{grid-template-columns:1fr}}
+</style></head><body><main class="home"><div class="home-card"><p class="eyebrow">RUT (MIIT) · MIRROR OF CHINA</p>
+<h1>Зеркало Поднебесной</h1><p>Россия ⇄ 中国 · Информация о Российском университете транспорта для иностранных студентов.<br>俄罗斯交通大学国际学生信息指南</p>
+<nav class="choices" aria-label="Choose language"><a href="./ru/index.html" lang="ru">Русская версия<span>Поступление, документы, программы и жизнь в университете</span></a><a href="./zh/index.html" lang="zh-CN">中文版<span>俄罗斯交通大学：申请、专业、学费与校园生活</span></a></nav>
+<p style="font-size:12px">Независимый информационный проект · 独立信息项目 · <a href="https://rut-miit.ru/" style="color:#fff">Официальный сайт РУТ (МИИТ) / 大学官网 ↗</a></p>
+</div></main></body></html>
