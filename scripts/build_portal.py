@@ -182,16 +182,21 @@ def russian_guides(meta: list[dict]):
 
 def resource_page():
     # Two native-language, static platform pages; old /resources/ remains a redirect.
-    # MIRROR_RESOURCES_RUZH_V7
+    # MIRROR_RESOURCES_RUZH_V7   
     destinations = [
         ('GitHub', 'https://github.com/BANAN333/mirror-of-china',
-         'Исходный код, сборка и поддержка данных', '源代码、网站构建和数据维护'),
+         'Основной репозиторий проекта и исходный код', '项目主代码仓库与源代码'),
         ('Hugging Face', 'https://huggingface.co/datasets/smasher143/rut-miit-bilingual-faq',
-         'Публичный набор вопросов и ответов RU/ZH', '公开的俄中双语问答数据集'),
+         'Открытый двуязычный набор данных RU/ZH', '公开的俄中双语问答数据集'),
         ('ModelScope / 魔搭社区', 'https://modelscope.cn/datasets/smasher143/rut-miit-bilingual-faq',
-         'Публикация двуязычного набора данных для разработчиков', '面向开发者的俄中双语数据集'),
+         'Публикация данных на китайской платформе', '在中国平台公开发布双语数据集'),
         ('CSDN', 'https://blog.csdn.net/smasher143/article/details/170740701',
-         'Техническая статья о создании базы знаний', '关于知识库构建的技术文章'),
+         'Техническая статья о базе знаний', '关于双语知识库的技术文章'),
+        ('AtomGit / GitCode', 'https://gitcode.com/smasher143/mirror-of-china',
+         'Публичное китайское зеркало GitHub', 'GitHub 代码仓库的公开中国平台镜像'),
+        ('Zenodo', None,
+         'Архив MVP и DOI — после финального релиза',
+         'MVP 归档及 DOI 将在正式发布后提供'),
     ]
     ru_url = BASE + 'ru/resources/'
     zh_url = BASE + 'zh/resources/'
@@ -203,10 +208,15 @@ def resource_page():
         note = ('本项目由学生独立维护，不代表俄罗斯交通大学官方立场。公开发布不意味着搜索引擎或 AI 助手已自动收录、学习或引用这些材料。'
                 if zh else 'Это независимый студенческий проект, не официальный ресурс РУТ. Публикация материалов не означает, что поисковики и ИИ уже обнаружили или использовали их.')
         description = ('天朝之镜：关于俄罗斯交通大学的俄中双语问答公开发布渠道'
-                       if zh else 'Площадки публикации проекта «Зеркало Поднебесной»: RU/ZH материалы о РУТ')
+                       if zh else 'Площадки публикации проекта «Зеркало Поднебесной»: RU/ZH материалы о РУТ')        
         cards = ''.join(
-            '<a class="mc-portal-card" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">'
-            '<strong>' + esc(name) + ' ↗</strong><small>' + esc(cn if zh else ru) + '</small></a>'
+            (
+                '<a class="mc-portal-card" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">'
+                '<strong>' + esc(name) + ' ↗</strong><small>' + esc(cn if zh else ru) + '</small></a>'
+                if url else
+                '<div class="mc-portal-card" aria-disabled="true">'
+                '<strong>' + esc(name) + '</strong><small>' + esc(cn if zh else ru) + '</small></div>'
+            )
             for name, url, ru, cn in destinations
         )
         canonical = zh_url if zh else ru_url
@@ -386,7 +396,24 @@ def patch_html(page: Path):
         raise RuntimeError(f'Некорректная страница без head/body: {page}')
     css = STYLE_BEGIN + '<style>' + NAV_CSS + '</style>' + STYLE_END
     text = re.sub(r'</head>',css+'</head>',text,count=1, flags=re.I)
-    text = re.sub(r'<body\b[^>]*>',lambda m: m.group(0)+nav(page),text,count=1,flags=re.I)
+    
+    # Avoid duplicate navigation on pages with the native V5 navbar.
+    if re.search(r'<nav\b[^>]*class=["\'][^"\']*\bv5-nav\b', text, re.I):
+        text = re.sub(
+            r'<!-- MIRROR_UNIFIED_NAV_BEGIN -->.*?<!-- MIRROR_UNIFIED_NAV_END -->',
+            '',
+            text,
+            flags=re.S
+        )
+    else:
+        text = re.sub(
+            r'<body\b[^>]*>',
+            lambda m: m.group(0) + nav(page),
+            text,
+            count=1,
+            flags=re.I
+        )
+
     # Preserve direct index.html links when opened locally (file://), not just on GitHub Pages.
     rel = page.relative_to(SITE).parts
     if rel == ('index.html',):
@@ -415,8 +442,12 @@ def patch_html(page: Path):
         text, n_notice = re.subn(
             r'<p\s+style=["\']font-size:12px["\']>\s*Независимый информационный проект.*?</p>',
             '<p class="mc-disclaimer">Независимый студенческий проект. Не является официальной приёмной страницей РУТ.</p>',
-            text, count=1, flags=re.I|re.S)
-        if n_notice != 1:
+            text, count=1, flags=re.I|re.S)       
+        if n_notice != 1 and not re.search(
+            r'<p\b[^>]*class=["\'][^"\']*\bmc-disclaimer\b',
+            text,
+            flags=re.I
+        ):
             raise RuntimeError('Не удалось обновить нижний текст главной страницы')
         text = re.sub(r'</body>', lambda _m: HOME_BEGIN + '<script>' + HOME_JS + '</script>' + HOME_END + '</body>',
                       text, count=1, flags=re.I)
@@ -510,9 +541,17 @@ def main():
         found = t.count('class="faq-card"')
         if found != expected:
             raise RuntimeError(f'FAQ {lang}: найдено {found} карточек вместо {expected}')
-        c=(SITE/lang/'checklist'/'index.html').read_text(encoding='utf-8')
-        if c.count('class="step"') != 7:
-            raise RuntimeError(f'Чек-лист {lang}: не обнаружены все 7 шагов')
+        c=(SITE/lang/'checklist'/'index.html').read_text(encoding='utf-8')       
+        js_path = SITE / 'assets' / 'admissions_v5.js'
+        if (
+            'data-mode="checklist"' not in c
+            or f'data-lang="{lang}"' not in c
+            or 'src="../../assets/admissions_v5.js"' not in c
+            or not js_path.is_file()
+        ):
+            raise RuntimeError(
+                f'Чек-лист {lang}: не найдена разметка или JS-модуль'
+            )
     print(f'OK: созданы {count} русских тематических страниц (5 гайдов + каталог)')
     print('OK: общий навбар и маршруты добавлены на главную, RU/ZH FAQ, гайды, чек-листы и открытые данные')
     print(f'OK: проверено {n} HTML-страниц, все локальные ссылки работают; Sitemap: {sitemap_count} URL')
