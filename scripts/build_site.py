@@ -454,7 +454,7 @@ if __name__ == '__main__':
     # Keep all additional pages, navigation, and sitemap URLs when regenerating the site.
     import subprocess as _mirror_subprocess
     import sys as _mirror_sys
-    for _mirror_addon in ('build_distribution.py', 'build_guides.py', 'build_checklist.py', 'build_portal.py', 'build_tools.py', 'build_smart_tools.py', 'build_admissions_v5.py'):
+    for _mirror_addon in ('build_distribution.py', 'build_guides.py', 'build_checklist.py', 'build_portal.py', 'build_tools.py', 'build_smart_tools.py', 'build_admissions_v5.py', 'apply_branding.py'):
         _mirror_path = ROOT / 'scripts' / _mirror_addon
         if not _mirror_path.is_file():
             raise SystemExit(f'Нужный генератор отсутствует: {_mirror_path}')
