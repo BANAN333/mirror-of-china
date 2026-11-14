@@ -194,9 +194,9 @@ def resource_page():
          'Техническая статья о базе знаний', '关于双语知识库的技术文章'),
         ('AtomGit / GitCode', 'https://gitcode.com/smasher143/mirror-of-china',
          'Публичное китайское зеркало GitHub', 'GitHub 代码仓库的公开中国平台镜像'),
-        ('Zenodo', None,
-         'Архив MVP и DOI — после финального релиза',
-         'MVP 归档及 DOI 将在正式发布后提供'),
+        ('Zenodo', 'https://doi.org/10.5281/zenodo.24219015',
+         'Архив MVP v1.0.0 · DOI: 10.5281/zenodo.24219015',
+         'MVP v1.0.0 归档 · DOI: 10.5281/zenodo.24219015'),
     ]
     ru_url = BASE + 'ru/resources/'
     zh_url = BASE + 'zh/resources/'
