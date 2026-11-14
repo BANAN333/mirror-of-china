@@ -236,10 +236,10 @@ def resource_page():
     # Compatibility route for any old links to /resources/. It keeps ?lang=zh.
     old = SITE / 'resources' / 'index.html'
     old.parent.mkdir(parents=True, exist_ok=True)
-    old.write_text('''<!doctype html><html lang="ru"><head><meta charset="utf-8">
+    old.write_text(r'''<!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="robots" content="noindex,follow"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="refresh" content="2; url=../ru/resources/index.html">
-<title>Площадки / 发布平台</title></head><body>
+<meta http-equiv="refresh" content="0; url=../ru/resources/index.html">
+<title>Площадки / 发布平台</title><style>body{display:none!important}</style></head><body>
 <p><a href="../ru/resources/index.html">Площадки проекта</a> · <a href="../zh/resources/index.html">项目发布平台</a></p>
 <script>(function(){
 // First preference: explicit URL query string (?lang=zh or ?lang=ru).
@@ -384,12 +384,15 @@ def hub(page: Path) -> str:
 
 
 def patch_html(page: Path):
+    if page.relative_to(SITE).parts == ('resources', 'index.html'):
+        return  # Legacy redirect stays invisible and has no nav.
     text = page.read_text(encoding='utf-8-sig')
     # Remove older disconnected promotional panels and any previous portal inserts.
     for begin,end in [
         ('<!-- MIRROR_GUIDES_NAV_START -->','<!-- MIRROR_GUIDES_NAV_END -->'),
         ('<!-- MIRROR_CHECKLIST_NAV_START -->','<!-- MIRROR_CHECKLIST_NAV_END -->'),
         (BEGIN,END),(STYLE_BEGIN,STYLE_END),(HUB_BEGIN,HUB_END),(HOME_BEGIN,HOME_END),
+        ('<!-- MIRROR_HOME_GUARD_BEGIN -->','<!-- MIRROR_HOME_GUARD_END -->'),
     ]:
         text = remove_marked(text,begin,end)
     if '</head>' not in text.lower() or not re.search(r'<body\b[^>]*>',text,re.I):
@@ -397,22 +400,16 @@ def patch_html(page: Path):
     css = STYLE_BEGIN + '<style>' + NAV_CSS + '</style>' + STYLE_END
     text = re.sub(r'</head>',css+'</head>',text,count=1, flags=re.I)
     
-    # Avoid duplicate navigation on pages with the native V5 navbar.
-    if re.search(r'<nav\b[^>]*class=["\'][^"\']*\bv5-nav\b', text, re.I):
-        text = re.sub(
-            r'<!-- MIRROR_UNIFIED_NAV_BEGIN -->.*?<!-- MIRROR_UNIFIED_NAV_END -->',
-            '',
-            text,
-            flags=re.S
-        )
-    else:
-        text = re.sub(
-            r'<body\b[^>]*>',
-            lambda m: m.group(0) + nav(page),
-            text,
-            count=1,
-            flags=re.I
-        )
+    # One shared navigation on the static site and V5 assistant pages.
+    text = re.sub(
+        r'<nav\b[^>]*class="v5-nav"[^>]*>.*?</nav>',
+        '', text, count=1, flags=re.I | re.S
+    )
+    text = re.sub(
+        r'<body\b[^>]*>',
+        lambda m: m.group(0) + nav(page),
+        text, count=1, flags=re.I
+    )
 
     # Preserve direct index.html links when opened locally (file://), not just on GitHub Pages.
     rel = page.relative_to(SITE).parts
@@ -430,6 +427,12 @@ def patch_html(page: Path):
             text = re.sub(r'</head>',alts+'</head>',text,count=1,flags=re.I)
     # Add prominent route to the guidebook and checklist on home + both FAQ pages.
     if rel == ('index.html',):
+        # Hide the Russian homepage briefly when opening the Chinese version.
+        guard = """<!-- MIRROR_HOME_GUARD_BEGIN -->
+<script>if(new URLSearchParams(location.search).get('lang')==='zh')document.documentElement.classList.add('mc-zh-pending')</script>
+<style>html.mc-zh-pending .home,html.mc-zh-pending .mc-site-nav{visibility:hidden!important}</style>
+<!-- MIRROR_HOME_GUARD_END -->"""
+        text = re.sub(r'</head>', lambda m: guard + m.group(0), text, count=1, flags=re.I)
         choices = re.search(r'<nav\s+class=["\']choices["\'][^>]*>.*?</nav>', text, re.I|re.S)
         if choices:
             text = text[:choices.start()] + hub(page) + text[choices.end():]
@@ -449,7 +452,7 @@ def patch_html(page: Path):
             flags=re.I
         ):
             raise RuntimeError('Не удалось обновить нижний текст главной страницы')
-        text = re.sub(r'</body>', lambda _m: HOME_BEGIN + '<script>' + HOME_JS + '</script>' + HOME_END + '</body>',
+        text = re.sub(r'</body>', lambda _m: HOME_BEGIN + '<script>' + HOME_JS + '</script>' + '<script>document.documentElement.classList.remove("mc-zh-pending")</script>' + HOME_END + '</body>',
                       text, count=1, flags=re.I)
     elif rel in [('ru','index.html'),('zh','index.html')]:
         start = re.search(r'<main\b[^>]*>',text,re.I)
@@ -541,16 +544,20 @@ def main():
         found = t.count('class="faq-card"')
         if found != expected:
             raise RuntimeError(f'FAQ {lang}: найдено {found} карточек вместо {expected}')
-        c=(SITE/lang/'checklist'/'index.html').read_text(encoding='utf-8')       
+        c=(SITE/lang/'checklist'/'index.html').read_text(encoding='utf-8')
+        # On CI the original seven-step checklist exists before V5 is built.
+        # A local incremental build may already use the V5 JavaScript checklist.
+        static_ok = c.count('class="step"') == 7
         js_path = SITE / 'assets' / 'admissions_v5.js'
-        if (
-            'data-mode="checklist"' not in c
-            or f'data-lang="{lang}"' not in c
-            or 'src="../../assets/admissions_v5.js"' not in c
-            or not js_path.is_file()
-        ):
+        v5_ok = (
+            'data-mode="checklist"' in c
+            and f'data-lang="{lang}"' in c
+            and 'src="../../assets/admissions_v5.js"' in c
+            and js_path.is_file()
+        )
+        if not (static_ok or v5_ok):
             raise RuntimeError(
-                f'Чек-лист {lang}: не найдена разметка или JS-модуль'
+                f'Чек-лист {lang}: нет семи статических шагов или V5 JS'
             )
     print(f'OK: созданы {count} русских тематических страниц (5 гайдов + каталог)')
     print('OK: общий навбар и маршруты добавлены на главную, RU/ZH FAQ, гайды, чек-листы и открытые данные')

@@ -144,8 +144,8 @@
   const sourceRow=(container,items)=>{for(const [url,text] of items)container.appendChild(mklink(programSafeUrl(url),text));};
   const download=(name,content)=>{const blob=new Blob([content],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(blob);const a=node('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);};
   function setSwitcher(plan){
-    const a=$('.v5-switch',document);if(a)a.href=a.href.split('?')[0]+encodePlan(plan);
-    if(mode==='wizard'){const b=$('.v5-nav-links a[href*="/checklist/"]',document);if(b)b.href=b.href.split('?')[0]+encodePlan(plan);}
+    const a=$('.mc-lang, .v5-switch',document);if(a)a.href=a.href.split('?')[0]+encodePlan(plan);
+    if(mode==='wizard'){const b=$('.mc-links a[href*="/checklist/"], .v5-nav-links a[href*="/checklist/"]',document);if(b)b.href=b.href.split('?')[0]+encodePlan(plan);}
   }
   let catalog=[];const byId=new Map();
   if(mode==='wizard'){
