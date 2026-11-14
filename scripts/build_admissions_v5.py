@@ -56,7 +56,7 @@ def nav(lang, current):
  # Both guides and checklist pages are two levels below site root.
  links=[('home',t['home'],'../../index.html?lang='+lang),('faq',t['faq'],'../index.html'),
         ('assistant',t['assistant'],'../guides/index.html'),('check',t['check'],'../checklist/index.html'),
-        ('resources',t['resources'],'../../resources/index.html')]
+        ('resources',t['resources'],'../resources/index.html')]
  other='zh' if lang=='ru' else 'ru'
  switch='../../'+other+'/'+('guides' if current=='assistant' else 'checklist')+'/index.html'
  return ('<nav class="v5-nav" aria-label="' + esc('网站导航' if lang=='zh' else 'Навигация') + '">'
@@ -152,6 +152,12 @@ def main():
   for seg in ('guides','checklist'):
    (SITE/lang/seg/'index.html').write_text(page(lang,'wizard' if seg=='guides' else 'checklist',data),encoding='utf-8')
  update_home_and_nav()
+ # V5 runs after the portal generator: reapply the shared menu to fresh pages.
+ from build_portal import patch_html as harmonize_nav
+ for lang in ('ru', 'zh'):
+  for section in ('guides', 'checklist'):
+   harmonize_nav(SITE/lang/section/'index.html')
+ harmonize_nav(SITE/'index.html')
  # Retain legacy deep links so existing CSDN / external links do not break.
  # Both home and old guide links lead to the new /guides/ entry point.
  for lang in ('ru','zh'):
