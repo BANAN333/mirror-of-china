@@ -24,6 +24,8 @@ for lang in ('ru', 'zh'):
     count = resources.count('class="mc-portal-card"')
     if count != 6 or 'AtomGit / GitCode' not in resources or 'Zenodo' not in resources:
         errors.append(f'{lang}: expected six platforms, got {count}')
+    if 'https://doi.org/10.5281/zenodo.24219015' not in resources or 'aria-disabled="true"><strong>Zenodo' in resources:
+        errors.append(f'{lang}: Zenodo MVP DOI link must be active')
     for section in ('guides', 'checklist'):
         page = read(f'{lang}/{section}/index.html')
         if f'data-lang="{lang}"' not in page:
