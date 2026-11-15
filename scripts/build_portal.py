@@ -348,7 +348,7 @@ def verified_count(lang: str) -> int:
 
 
 def hub(page: Path) -> str:
-    """The same three-stage journey on homepage and FAQ pages."""
+    """The three-stage journey on the homepage."""
     zh = page_language(page) == 'zh'
     home = page.parent == SITE
     if zh:
@@ -425,7 +425,7 @@ def patch_html(page: Path):
             alts = ('<link rel="alternate" hreflang="ru" href="'+esc(alt_ru)+'">'
                     '<link rel="alternate" hreflang="zh-CN" href="'+esc(alt_zh)+'">')
             text = re.sub(r'</head>',alts+'</head>',text,count=1,flags=re.I)
-    # Add prominent route to the guidebook and checklist on home + both FAQ pages.
+    # Add the three starter cards to the homepage.
     if rel == ('index.html',):
         # Hide the Russian homepage briefly when opening the Chinese version.
         guard = """<!-- MIRROR_HOME_GUARD_BEGIN -->
@@ -454,9 +454,6 @@ def patch_html(page: Path):
             raise RuntimeError('Не удалось обновить нижний текст главной страницы')
         text = re.sub(r'</body>', lambda _m: HOME_BEGIN + '<script>' + HOME_JS + '</script>' + '<script>document.documentElement.classList.remove("mc-zh-pending")</script>' + HOME_END + '</body>',
                       text, count=1, flags=re.I)
-    elif rel in [('ru','index.html'),('zh','index.html')]:
-        start = re.search(r'<main\b[^>]*>',text,re.I)
-        if start: text = text[:start.end()] + hub(page) + text[start.end():]
     page.write_text(text,encoding='utf-8')
 
 
