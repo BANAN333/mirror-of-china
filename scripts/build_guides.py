@@ -10,13 +10,13 @@ import html
 import json
 import re
 import xml.etree.ElementTree as ET
-from datetime import date
 from pathlib import Path
+
+from site_config import DEFAULT_SITE_URL, SITE_URL as BASE
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / 'distribution' / 'guidebook'
 DEST = ROOT / 'site' / 'zh' / 'guides'
-BASE = 'https://banan333.github.io/mirror-of-china/'
 GUARD_START = '<!-- MIRROR_GUIDES_NAV_START -->'
 GUARD_END = '<!-- MIRROR_GUIDES_NAV_END -->'
 
@@ -72,6 +72,7 @@ def page(title: str, desc: str, canonical: str, body: str, links: str, article: 
                        'datePublished':'2026-11-13','dateModified':'2026-11-13'})
     jsonld=json.dumps(schema,ensure_ascii=False).replace('</','<\\/')
     h=lambda x:html.escape(x,quote=True)
+    kind = 'article' if article else 'website'
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -79,14 +80,15 @@ def page(title: str, desc: str, canonical: str, body: str, links: str, article: 
 <meta name="description" content="{h(desc)}"/>
 <meta name="robots" content="index,follow"/>
 <link rel="canonical" href="{h(canonical)}"/>
-<meta property="og:type" content="article"/>
+<meta property="og:type" content="{kind}"/>
 <meta property="og:title" content="{h(title)}"/>
+<meta property="og:description" content="{h(desc)}"/>
 <meta property="og:url" content="{h(canonical)}"/>
 <script type="application/ld+json">{jsonld}</script>
 <style>
-:root{{color-scheme:light}}*{{box-sizing:border-box}}body{{margin:0;font-family:system-ui,-apple-system,'Noto Sans SC','Microsoft YaHei',sans-serif;background:#f5f8fd;color:#19304e;line-height:1.8}}.wrap{{max-width:880px;margin:0 auto;padding:24px}}a{{color:#1762b0;text-decoration:underline;text-underline-offset:3px}}a:hover{{color:#0b3c75}}nav{{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:25px}}.sheet{{padding:clamp(20px,4vw,45px);background:white;border:1px solid #e0e9f3;border-radius:20px;box-shadow:0 7px 34px #172b4d10}}h1{{font-size:clamp(24px,4vw,36px);line-height:1.3;margin:0 0 24px}}h2{{font-size:22px;line-height:1.4;padding-top:16px;margin-top:28px;border-top:1px solid #e8edf5}}p,li{{font-size:16px}}blockquote{{margin:18px 0;padding:15px 20px;border-left:4px solid #408bd4;background:#eff6fd;color:#365375}}li{{margin:7px 0}}ul,ol{{padding-left:23px}}code{{background:#f0f3f9;border-radius:5px;padding:2px 5px}}.links{{margin-top:36px;padding-top:20px;border-top:2px solid #edf2f8}}.links a{{display:inline-block;margin:7px 15px 7px 0}}footer{{font-size:13px;color:#617590;margin-top:23px}}@media(max-width:550px){{.wrap{{padding:12px}}.sheet{{border-radius:12px}}}}</style></head>
-<body><div class="wrap"><nav><a href="{h(BASE)}zh/index.html">← 中文 FAQ</a><a href="{h(BASE)}zh/guides/index.html">专题指南</a><a href="{h(BASE)}open-data/">开放数据</a></nav>
-<main class="sheet">{body}<div class="links"><strong>继续阅读：</strong><div>{links}</div></div></main>
+:root{{color-scheme:light}}*{{box-sizing:border-box}}body{{margin:0;font-family:system-ui,-apple-system,'Noto Sans SC','Microsoft YaHei',sans-serif;background:#f5f8fd;color:#19304e;line-height:1.8;overflow-wrap:anywhere}}.wrap{{max-width:880px;margin:0 auto;padding:24px}}a{{color:#1762b0;text-decoration:underline;text-underline-offset:3px}}a:hover{{color:#0b3c75}}.sheet{{padding:clamp(20px,4vw,45px);background:white;border:1px solid #e0e9f3;border-radius:20px;box-shadow:0 7px 34px #172b4d10}}h1{{font-size:clamp(24px,4vw,36px);line-height:1.3;margin:0 0 24px}}h2{{font-size:22px;line-height:1.4;padding-top:16px;margin-top:28px;border-top:1px solid #e8edf5}}p,li{{font-size:16px}}blockquote{{margin:18px 0;padding:15px 20px;border-left:4px solid #408bd4;background:#eff6fd;color:#365375}}li{{margin:7px 0}}ul,ol{{padding-left:23px}}code{{background:#f0f3f9;border-radius:5px;padding:2px 5px}}.links{{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px;padding-top:20px;border-top:2px solid #edf2f8}}.links a{{display:inline-block;padding:4px 0}}footer{{font-size:13px;color:#617590;margin-top:23px}}@media(max-width:550px){{.wrap{{padding:12px}}.sheet{{border-radius:12px}}}}</style></head>
+<body><div class="wrap">
+<main class="sheet">{body}<nav class="links" aria-label="相关链接">{links}</nav></main>
 <footer>独立学生信息整理项目「Зеркало Поднебесной」。不是俄罗斯交通大学官方网站。资料核对日期：2026-11-13。</footer></div></body></html>'''
 
 
@@ -146,8 +148,8 @@ def main():
             raise RuntimeError('Отсутствуют официальные ссылки в '+str(src))
         out=DEST/slug;out.mkdir(parents=True,exist_ok=True)
         url=index_url+slug+'/'
-        others=''.join('<a href="../'+html.escape(t['slug'])+'/index.html">'+html.escape(t['title'])+'</a>' for t in meta if t['slug']!=slug)
-        (out/'index.html').write_text(page(x['title'],x['description'],url,render_md(md),others,True),encoding='utf-8')
+        others='<a href="../index.html">打开申请助手</a>' + ''.join('<a href="../'+html.escape(t['slug'])+'/index.html">'+html.escape(t['title'])+'</a>' for t in meta if t['slug']!=slug)
+        (out/'index.html').write_text(page(x['title'],x['description'],url,render_md(md.replace(DEFAULT_SITE_URL, BASE)),others,True),encoding='utf-8')
         urls.append(url)
     insert_nav(ROOT/'site'/'zh'/'index.html', './guides/index.html','查看专题指南')
     insert_nav(ROOT/'site'/'index.html','./zh/guides/index.html','中国申请者指南')
@@ -164,7 +166,6 @@ def main():
     print('OK: sitemap.xml содержит 6 новых адресов (индекс + 5 статей)')
     print('Исходники статей: distribution/guidebook/zh/*.md')
     print('Сайт: site/zh/guides/index.html')
-    print('ВАЖНО: после каждой сборки сайта заново запускай scripts/build_guides.py последним.')
 
 if __name__=='__main__':
     try:main()

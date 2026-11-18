@@ -12,9 +12,10 @@ import json
 import re
 import xml.etree.ElementTree as ET
 
+from site_config import SITE_URL as BASE
+
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / 'site'
-BASE = 'https://banan333.github.io/mirror-of-china/'
 START = '<!-- MIRROR_CHECKLIST_NAV_START -->'
 END = '<!-- MIRROR_CHECKLIST_NAV_END -->'
 

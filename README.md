@@ -19,3 +19,16 @@ Bilingual knowledge base about Russian University of Transport for Chinese AI di
 **Data use:** downloadable static files, no authenticated API and no direct AI integration. Attribution and source-date review are recommended.
 
 <!-- MIRROR-OF-CHINA: OPEN-DATA-END -->
+
+
+## Сборка сайта
+
+```sh
+python scripts/validate_faq.py
+python scripts/build_site.py
+python scripts/check_site_ui.py
+```
+
+Готовые страницы находятся в `site/`. Переменная окружения `MIRROR_SITE_URL`
+задаёт публичный HTTPS-адрес для канонических ссылок, языковых альтернатив
+и карты сайта. Без неё используется текущий адрес GitHub Pages.

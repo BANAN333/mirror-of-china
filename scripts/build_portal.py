@@ -15,9 +15,10 @@ from urllib.parse import urlsplit, unquote
 from html.parser import HTMLParser
 import xml.etree.ElementTree as ET
 
+from site_config import SITE_URL as BASE
+
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
-BASE = "https://banan333.github.io/mirror-of-china/"
 META = ROOT / "distribution" / "guidebook" / "guides.json"
 BEGIN = "<!-- MIRROR_UNIFIED_NAV_BEGIN -->"
 END = "<!-- MIRROR_UNIFIED_NAV_END -->"
@@ -57,16 +58,16 @@ GUIDES = {
 
 NAV_CSS = """
 .mc-site-nav{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1px solid #dbe5f0;box-shadow:0 4px 20px #172e4a13;font-family:system-ui,-apple-system,'Segoe UI','Noto Sans SC',sans-serif;color:#172d49}
-.mc-nav-inner{max-width:1160px;margin:auto;min-height:67px;padding:9px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px}
+.mc-nav-inner{box-sizing:border-box;width:100%;max-width:1160px;margin:auto;min-height:67px;padding:9px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px}
 .mc-logo{font-weight:850;font-size:15px;color:#15355e;text-decoration:none;display:flex;align-items:center;gap:9px;white-space:nowrap}
 .mc-logo-mark{display:grid;place-items:center;border-radius:9px;background:#143e6b;color:#fff;font-size:13px;width:29px;height:29px}
 .mc-links{display:flex;align-items:center;gap:5px;flex-wrap:wrap;flex:1}
 .mc-links a{color:#3a5576;text-decoration:none;font-size:13px;font-weight:700;padding:9px 11px;border-radius:9px;white-space:nowrap}
+.mc-links a{flex:none}
 .mc-links a:hover{background:#eaf2fc;color:#163e74;text-decoration:none}
 .mc-links a.mc-current{background:#e8f1ff;color:#124b93}
 .mc-lang{margin-left:auto;white-space:nowrap;text-decoration:none;color:#15528a;border:1px solid #cdddec;border-radius:99px;padding:8px 12px;font-size:12px;font-weight:800}
 .mc-site-nav a:focus-visible,.mc-portal-hub a:focus-visible{outline:3px solid #ebaa34;outline-offset:2px}
-body>.topbar{display:none!important}
 body>.mc-site-nav + .wrap > nav{display:none!important}
 .mc-portal-hub{margin:0 auto 24px;max-width:1100px;font-family:system-ui,-apple-system,'Segoe UI','Noto Sans SC',sans-serif;color:#173050}
 .mc-portal-hub h2{font-size:clamp(20px,3vw,28px);margin:0 0 6px;color:#173050}
@@ -79,7 +80,7 @@ body>.mc-site-nav + .wrap > nav{display:none!important}
 .mc-home-hub{margin:21px 0 10px;text-align:left}
 .mc-home-hub h2{color:#fff;font-size:17px;margin:0 0 12px}
 .mc-home-hub .mc-portal-card{color:#173d70}
-@media(max-width:720px){.mc-nav-inner{padding:11px 13px;gap:8px}.mc-links{order:3;flex-basis:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.mc-links a{font-size:12px}.mc-lang{margin-left:auto}.mc-portal-cards{grid-template-columns:1fr}.mc-portal-card{padding:15px}}
+@media(max-width:720px){.mc-nav-inner{padding:11px 13px;gap:8px}.mc-links{order:3;flex-basis:100%;min-width:0;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.mc-links a{font-size:12px}.mc-lang{margin-left:auto}.mc-portal-cards{grid-template-columns:1fr}.mc-portal-card{padding:15px}}
 .mc-nav-actions{margin-left:auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .mc-nav-actions .mc-lang{margin-left:0}
 .mc-official{white-space:nowrap;text-decoration:none;color:#fff;background:#194c82;border:1px solid #194c82;border-radius:99px;padding:9px 13px;font-size:12px;font-weight:800}
@@ -92,7 +93,7 @@ body>.mc-site-nav + .wrap > nav{display:none!important}
 .mc-home-hub .mc-portal-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px #0519323b}
 .home-card{width:min(980px,100%) !important}
 .home .mc-disclaimer{font-size:12px;color:#bed0e7;margin-top:17px}
-@media(max-width:900px){.mc-nav-inner{gap:8px}.mc-nav-actions{margin-left:auto}.mc-links{order:3;flex-basis:100%;overflow-x:auto;flex-wrap:nowrap;padding:2px 0 4px}}
+@media(max-width:900px){.mc-nav-inner{gap:8px}.mc-nav-actions{margin-left:auto}.mc-links{order:3;flex-basis:100%;min-width:0;overflow-x:auto;flex-wrap:nowrap;padding:2px 0 4px}}
 @media(max-width:540px){.mc-nav-actions{gap:5px}.mc-official,.mc-lang{font-size:11px;padding:8px 9px}.mc-home-hub .mc-portal-card{min-height:0}}
 
 """
@@ -170,7 +171,7 @@ def russian_guides(meta: list[dict]):
             sections.append(f'<section class="rg-faq" id="{esc(faq_id)}"><h2>{esc(item["question"])}</h2><p>{esc(item["answer"])}</p><div class="rg-meta">{source_html}<span>Проверено: {esc(item.get("last_verified","не указано"))}</span><a href="../../index.html#{esc(faq_id)}">Вопрос в общей базе FAQ</a></div></section>')
         file = folder / slug / 'index.html'
         file.parent.mkdir(parents=True, exist_ok=True)
-        page = f'''<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index,follow"><title>{esc(info['title'])} | Зеркало Поднебесной</title><meta name="description" content="{esc(info['desc'])}"><link rel="canonical" href="{esc(canonical)}"><link rel="alternate" hreflang="ru" href="{esc(canonical)}"><link rel="alternate" hreflang="zh-CN" href="{esc(href_zh)}"><style>{RU_GUIDES_CSS}</style></head><body><main class="rg-wrap"><article class="rg-sheet"><div class="rg-eyebrow">РУТ (МИИТ) · РУССКОЯЗЫЧНЫЙ СПРАВОЧНИК</div><h1>{esc(info['title'])}</h1><p class="rg-lead">{esc(info['intro'])}</p><aside class="rg-notice">Это независимый студенческий справочник, а не официальная инструкция университета. Условия приёма, цены и сроки меняются; уточняй их по ссылкам на источники и в актуальных правилах РУТ.</aside>{''.join(sections)}<div class="rg-other"><strong>Что дальше?</strong><p><a href="../../checklist/index.html">Пройти чек-лист поступления</a><a href="../../index.html">Все 24 FAQ</a><a href="../../../zh/guides/{esc(slug)}/index.html">中文版</a></p></div></article><footer class="rg-footer">Зеркало Поднебесной · Независимый образовательный проект · Неофициальная информация</footer></main></body></html>'''
+        page = f'''<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index,follow"><title>{esc(info['title'])} | Зеркало Поднебесной</title><meta name="description" content="{esc(info['desc'])}"><link rel="canonical" href="{esc(canonical)}"><link rel="alternate" hreflang="ru" href="{esc(canonical)}"><link rel="alternate" hreflang="zh-CN" href="{esc(href_zh)}"><style>{RU_GUIDES_CSS}</style></head><body><main class="rg-wrap"><article class="rg-sheet"><div class="rg-eyebrow">РУТ (МИИТ) · РУССКОЯЗЫЧНЫЙ СПРАВОЧНИК</div><h1>{esc(info['title'])}</h1><p class="rg-lead">{esc(info['intro'])}</p><aside class="rg-notice">Это независимый студенческий справочник, а не официальная инструкция университета. Условия приёма, цены и сроки меняются; уточняй их по ссылкам на источники и в актуальных правилах РУТ.</aside>{''.join(sections)}<div class="rg-other"><strong>Что дальше?</strong><p><a href="../index.html">Открыть помощник поступления</a><a href="../../checklist/index.html">Мой план</a><a href="../../index.html">Все вопросы и гайды</a></p></div></article><footer class="rg-footer">Зеркало Поднебесной · Независимый образовательный проект · Неофициальная информация</footer></main></body></html>'''
         file.write_text(page, encoding='utf-8')
         listing.append(f'<a class="mc-portal-card" href="{esc(slug)}/index.html"><strong>{esc(info["title"])}</strong><small>{esc(info["desc"])}</small></a>')
     path = folder / 'index.html'
@@ -280,7 +281,7 @@ def page_language(page: Path) -> str:
 def current_section(page: Path) -> str:
     parts = page.relative_to(SITE).parts
     if not parts or parts == ('index.html',): return 'home'
-    if 'guides' in parts: return 'guides'
+    if 'guides' in parts: return 'guides' if len(parts) == 3 else ''
     if 'checklist' in parts: return 'checklist'
     if 'open-data' in parts: return 'open-data'
     if 'resources' in parts: return 'resources'
@@ -326,13 +327,14 @@ def nav(page: Path) -> str:
         items.append(f'<a href="{esc(href)}"{attrs}>{esc(label)}</a>')
     title = '天朝之镜' if zh else 'Зеркало Поднебесной'
     switch = 'Русский' if zh else '中文'
+    switch_lang = 'ru' if zh else 'zh-CN'
     official_label = '俄交大官网 ↗' if zh else 'Сайт РУТ ↗'
     return (f'{BEGIN}<nav class="mc-site-nav" aria-label="{"网站导航" if zh else "Навигация по сайту"}">'
             f'<div class="mc-nav-inner"><a class="mc-logo" href="{esc(href_from(page, SITE / "index.html") + ("?lang=zh" if zh else ""))}">'
             f'<span class="mc-logo-mark">中</span>{esc(title)}</a>'
             f'<div class="mc-links">{"".join(items)}</div>'
             f'<div class="mc-nav-actions">'
-            f'<a class="mc-lang" href="{esc(counterpart_href)}" lang="{other_lang}">{switch}</a>'
+            f'<a class="mc-lang" href="{esc(counterpart_href)}" lang="{switch_lang}">{switch}</a>'
             f'<a class="mc-official" href="https://www.rut-miit.ru/" target="_blank" rel="noopener noreferrer">'
             f'{esc(official_label)}</a></div></div></nav>'
             f'<script data-mirror-language="1">(function(){{'
@@ -399,10 +401,10 @@ def patch_html(page: Path):
         raise RuntimeError(f'Некорректная страница без head/body: {page}')
     css = STYLE_BEGIN + '<style>' + NAV_CSS + '</style>' + STYLE_END
     text = re.sub(r'</head>',css+'</head>',text,count=1, flags=re.I)
-    
-    # One shared navigation on the static site and V5 assistant pages.
+
+    # Replace the standalone generator menus with a shared navigation.
     text = re.sub(
-        r'<nav\b[^>]*class="v5-nav"[^>]*>.*?</nav>',
+        r'[ \t]*<header\b[^>]*class="topbar"[^>]*>.*?</header>\n?',
         '', text, count=1, flags=re.I | re.S
     )
     text = re.sub(
@@ -467,9 +469,11 @@ def update_sitemap():
     urls = {u.text for u in root.findall(f'.//{{{ns}}}loc')}
     for slug in [None, *GUIDES.keys()]:
         suffix = 'ru/guides/' if slug is None else f'ru/guides/{slug}/'
-        url=BASE+suffix
+        url = BASE + suffix
         if url not in urls:
-            child=ET.SubElement(root,f'{{{ns}}}url'); ET.SubElement(child,f'{{{ns}}}loc').text=url; urls.add(url)
+            child = ET.SubElement(root, f'{{{ns}}}url')
+            ET.SubElement(child, f'{{{ns}}}loc').text = url
+            urls.add(url)
     # Replace the legacy bilingual URL with two canonical localized pages.
     for child in list(root.findall(f'{{{ns}}}url')):
         loc = child.find(f'{{{ns}}}loc')

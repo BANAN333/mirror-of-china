@@ -14,10 +14,17 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from xml.sax.saxutils import escape as xml_escape
 
+from site_config import SITE_URL as BASE_URL
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 OUTPUT_DIR = ROOT / "site"
-BASE_URL = "https://banan333.github.io/mirror-of-china/"
+
+GUIDE_LINKS = {
+    "ru": ("Тематические материалы", "Поступление", "Документы", "Программы", "Стоимость", "Общежитие и приезд"),
+    "zh": ("留学指南", "申请流程", "申请材料", "专业与中俄合作", "学费与预算", "宿舍与报到"),
+}
+GUIDE_SLUGS = ("admissions", "documents", "programs", "tuition", "life")
 
 LANGUAGES = {
     "ru": {
@@ -26,12 +33,14 @@ LANGUAGES = {
         "description": "Двуязычная база ответов о поступлении в РУТ (МИИТ): документы, экзамены, стоимость, обучение и общежития. Ссылки на первоисточники университета.",
         "brand": "Зеркало Поднебесной",
         "eyebrow": "РОССИЙСКИЙ УНИВЕРСИТЕТ ТРАНСПОРТА · МОСКВА",
-        "heading": "Поступление в РУТ (МИИТ) — без лишних вопросов",
+        "heading": "Поступление в РУТ (МИИТ). Вопросы и ответы",
         "lead": "Ответы об учёбе в России для иностранных абитуриентов. На русском и китайском, с прямыми ссылками на документы университета.",
         "locale": "RU / ZH",
         "switch": "中文版",
         "official": "Сайт университета",
-        "stat_answers": "ответа на каждом языке",
+        "stat_answers": "проверенных ответов",
+        "faq_categories": "Темы вопросов",
+        "no_script": "Фильтры требуют JavaScript. Все ответы доступны на этой странице.",
         "stat_sources": "ссылки на источники",
         "stat_fresh": "обновление базы",
         "browse_title": "Найди нужный ответ",
@@ -53,16 +62,18 @@ LANGUAGES = {
     },
     "zh": {
         "html_lang": "zh-CN",
-        "title": "天朝之镜｜俄罗斯交通大学（РУТ МИИТ）留学申请指南",
+        "title": "俄罗斯交通大学（RUT/MIIT）留学申请问答｜天朝之镜",
         "description": "俄罗斯交通大学 RUT（MIIT）中文入学问答：申请材料、入学考试、学费、专业选择和宿舍。附俄罗斯交通大学官网来源链接。",
         "brand": "天朝之镜",
         "eyebrow": "俄罗斯交通大学 RUT（MIIT）· 莫斯科",
-        "heading": "申请俄罗斯交通大学，从这里开始",
+        "heading": "俄罗斯交通大学申请问答",
         "lead": "为中国及其他国际申请者整理的实用问答。俄中双语对照，附大学官方网站原始资料链接。",
         "locale": "中文 / RU",
         "switch": "Русская версия",
         "official": "大学官方网站",
         "stat_answers": "条双语问答",
+        "faq_categories": "问答分类",
+        "no_script": "筛选需要 JavaScript。您可以在本页阅读所有问答。",
         "stat_sources": "官方资料链接",
         "stat_fresh": "资料更新日期",
         "browse_title": "查找你关心的问题",
@@ -153,7 +164,7 @@ def card_html(item: dict, language: str, number: int) -> str:
     query = str(item["question"]) + " " + str(item["answer"]) + " " + item_id
     return f'''<article class="faq-card" id="{fragment}" data-section="{section}" data-search="{escape(query.lower(), quote=True)}">
       <div class="faq-topline"><span class="topic topic-{section}">{escape(t["categories"][section])}</span><span class="item-number">{number:02d}</span></div>
-      <h2>{question}</h2>
+      <h3>{question}</h3>
       <p class="answer">{answer}</p>
       <div class="card-bottom"><div class="source-line"><span>{escape(t["source"])}:</span> {source_link}</div>{checked}</div>
       <a class="permalink" href="#{fragment}" aria-label="{escape(t["permalink"], quote=True)}"># {escape(t["permalink"])}</a>
@@ -185,6 +196,7 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #f6
 .hero h1 { font-size:clamp(30px,4.7vw,53px); line-height:1.12; letter-spacing:-.035em; max-width:690px; margin:17px 0 20px; }
 .hero p { max-width:670px; line-height:1.72; font-size:16px; color:#d7e6f9; margin:0; }
 .hero-panel { min-height:225px; border:1px solid #ffffff40; border-radius:24px; background:linear-gradient(145deg,#ffffff19,#ffffff0b); display:grid; align-content:center; justify-items:center; text-align:center; box-shadow:0 14px 50px #07162a25; }
+.hero :lang(zh-CN) { letter-spacing:normal; }
 .hero-panel strong { font-size:75px; font-weight:850; letter-spacing:-.075em; line-height:1.2; }
 .hero-panel span { font-size:13px; color:#dfecff; margin-top:4px; }
 .hero-panel em { margin-top:22px; padding:7px 12px; font-style:normal; font-size:11px; letter-spacing:.09em; color:var(--navy); background:var(--gold); border-radius:99px; font-weight:800; }
@@ -192,6 +204,11 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #f6
 .section-head { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:21px; }
 .section-head h2 { font-size:clamp(24px,3vw,31px); margin:0 0 8px; letter-spacing:-.025em; }
 .section-head p { margin:0; color:var(--muted); line-height:1.6; }
+.guide-links { margin:0 0 28px; padding:17px 20px; border:1px solid var(--border); border-radius:16px; background:#edf4ff; }
+.guide-links strong { display:block; margin-bottom:9px; }
+.guide-links ul { display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none; }
+.guide-links a { display:block; padding:8px 12px; background:#fff; border:1px solid #cadbf0; border-radius:9px; font-size:14px; font-weight:650; text-decoration:none; }
+.guide-links a:hover { background:#ddeaff; }
 .toolbar { background:#fff; border:1px solid var(--border); border-radius:18px; box-shadow:0 8px 24px #17315108; padding:18px; margin-bottom:21px; }
 .tabs { display:flex; gap:8px; overflow-x:auto; scrollbar-width:thin; padding-bottom:4px; margin-bottom:16px; }
 .tab { cursor:pointer; border:1px solid var(--border); border-radius:999px; background:#f9fbff; color:#334b6d; padding:10px 16px; white-space:nowrap; font-weight:700; font-size:13px; }
@@ -204,7 +221,7 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #f6
 .clear { cursor:pointer; border:0; background:transparent; color:#1e56ac; font-weight:700; padding:11px; }
 .result-count { font-size:13px; color:var(--muted); font-weight:600; margin:12px 4px 0; }
 .faq-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:17px; }
-.faq-card { position:relative; display:flex; flex-direction:column; background:#fff; border:1px solid var(--border); padding:25px 26px 22px; border-radius:16px; box-shadow:0 7px 23px #17315107; scroll-margin-top:15px; }
+.faq-card { position:relative; display:flex; flex-direction:column; background:#fff; border:1px solid var(--border); padding:25px 26px 22px; border-radius:16px; box-shadow:0 7px 23px #17315107; scroll-margin-top:125px; }
 .faq-card:target { outline:3px solid #f5c56a; }
 .faq-card[hidden] { display:none !important; }
 .faq-topline { display:flex; justify-content:space-between; align-items:center; gap:12px; }
@@ -213,7 +230,7 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #f6
 .topic-programs { color:#3d6a4b; background:#e8f8eb; }
 .topic-about { color:#704f9d; background:#f0eaff; }
 .item-number { font-variant-numeric:tabular-nums; color:#93a3b7; font-weight:800; font-size:12px; }
-.faq-card h2 { font-size:19px; letter-spacing:-.02em; line-height:1.43; margin:15px 0 11px; }
+.faq-card h3 { font-size:19px; letter-spacing:-.02em; line-height:1.43; margin:15px 0 11px; }
 .answer { white-space:pre-line; line-height:1.72; font-size:14px; color:#324762; margin:0 0 22px; flex:1; overflow-wrap:anywhere; }
 .card-bottom { border-top:1px solid #e7edf4; padding-top:14px; display:flex; flex-direction:column; gap:9px; font-size:12px; color:#566c86; }
 .source-line { overflow-wrap:anywhere; }
@@ -229,7 +246,7 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #f6
 .footer-inner { display:flex; gap:15px; justify-content:space-between; flex-wrap:wrap; }
 .footer a { color:#456a9e; }
 @media (max-width:800px) { .hero-grid{grid-template-columns:1fr;padding:50px 0 56px} .hero-panel{display:none} .faq-grid{grid-template-columns:1fr} }
-@media (max-width:560px) { .wrap{width:min(100% - 28px,1100px)} .nav-inner{align-items:flex-start} .brand{font-size:14px} .nav-actions{justify-content:flex-end} .nav-actions a{font-size:11px;padding:8px} .hero h1{font-size:31px} .hero p{font-size:14px} .toolbar{padding:13px} .faq-card{padding:20px} .nav-actions .official{display:none} }
+@media (max-width:560px) { .wrap{width:min(100% - 28px,1100px)} .nav-inner{align-items:flex-start} .brand{font-size:14px} .nav-actions{justify-content:flex-end} .nav-actions a{font-size:11px;padding:8px} .hero h1{font-size:clamp(25px,7vw,31px)} .hero p{font-size:14px} .toolbar{padding:13px} .faq-card{padding:20px} .nav-actions .official{display:none} }
 @media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto} }
 """
 
@@ -242,13 +259,15 @@ JS = r"""
   const empty = document.getElementById('empty');
   const reset = document.getElementById('clear-filters');
   const total = cards.length;
+  const normalize = value => value.normalize('NFKC').toLowerCase().replaceAll('ё', 'е');
+  const searchableCards = cards.map(card => [card, normalize(card.dataset.search)]);
   let section = 'faq';
   function apply() {
-    const terms = input.value.toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
+    const terms = normalize(input.value).trim().split(/\s+/).filter(Boolean);
     let shown = 0;
-    cards.forEach(card => {
+    searchableCards.forEach(([card, text]) => {
       const matchesSection = section === 'faq' || card.dataset.section === section;
-      const matchesQuery = terms.every(term => card.dataset.search.includes(term));
+      const matchesQuery = terms.every(term => text.includes(term));
       const visible = matchesSection && matchesQuery;
       card.hidden = !visible;
       if (visible) shown++;
@@ -269,8 +288,14 @@ JS = r"""
   });
   // A deep-linked FAQ is always discoverable, even if the current filter hides it.
   window.addEventListener('hashchange', () => {
-    const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-    if (target && target.classList.contains('faq-card')) { input.value = ''; tabs[0].click(); }
+    const hash = location.hash.slice(1);
+    let id;
+    try { id = decodeURIComponent(hash); } catch (_) { return; }
+    const target = document.getElementById(id);
+    if (!target?.classList.contains('faq-card') || !target.hidden) return;
+    input.value = '';
+    tabs[0].click();
+    target.scrollIntoView();
   });
   apply();
 })();
@@ -303,24 +328,25 @@ PAGE = r'''<!doctype html>
       </nav>
     </div>
   </header>
-  <section class="hero"><div class="wrap hero-grid">
-    <div><div class="eyebrow">%%EYEBROW%%</div><h1>%%HEADING%%</h1><p>%%LEAD%%</p></div>
+  <section class="hero" aria-labelledby="faq-heading"><div class="wrap hero-grid">
+    <div><div class="eyebrow">%%EYEBROW%%</div><h1 id="faq-heading">%%HEADING%%</h1><p>%%LEAD%%</p></div>
     <div class="hero-panel"><strong>%%TOTAL%%</strong><span>%%STAT_ANSWERS%%</span><em>%%LOCALE%%</em></div>
   </div></section>
   <main class="wrap body-content" id="content">
+    %%GUIDES%%
     <div class="section-head"><div><h2>%%BROWSE_TITLE%%</h2><p>%%BROWSE_HINT%%</p></div></div>
     <div class="toolbar">
-      <nav class="tabs" aria-label="FAQ categories">%%TABS%%</nav>
+      <nav class="tabs" aria-label="%%FAQ_CATEGORIES%%">%%TABS%%</nav>
       <label for="search" class="sr-label">%%SEARCH_LABEL%%</label>
       <div class="search-row"><div class="search-field">
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
         <input id="search" type="search" autocomplete="off" aria-label="%%SEARCH_LABEL%%" placeholder="%%SEARCH_PLACEHOLDER%%">
       </div><button id="clear-filters" type="button" class="clear">%%CLEAR%%</button></div>
-      <p class="result-count">%%RESULTS%%: <span id="results" data-of="%%OF%%">%%TOTAL%% %%OF%% %%TOTAL%%</span></p>
+      <p class="result-count">%%RESULTS%%: <span id="results" role="status" data-of="%%OF%%">%%TOTAL%% %%OF%% %%TOTAL%%</span></p>
     </div>
     <div class="faq-grid" id="faq-list">%%CARDS%%</div>
     <p id="empty" class="empty" hidden>%%EMPTY%%</p>
-    <noscript><p>JavaScript is optional. All verified questions and answers are displayed below.</p></noscript>
+    <noscript><p>%%NO_SCRIPT%%</p><style>.toolbar{display:none}</style></noscript>
     <aside class="notice"><h2>%%DISCLAIMER_TITLE%%</h2><p>%%DISCLAIMER%%</p></aside>
   </main>
   <footer class="footer"><div class="wrap footer-inner"><span>%%FOOTER%%</span><span><time datetime="%%UPDATED%%">%%UPDATED%%</time> · <a href="../index.html">Mirror of China</a></span></div></footer>
@@ -353,12 +379,22 @@ def generate_page(language: str, data: dict) -> str:
         f'<button type="button" class="tab" data-section="{key}" aria-pressed="{str(key == "faq").lower()}">{escape(label)}</button>'
         for key, label in t["tabs"].items()
     )
+    guide_title, *guide_labels = GUIDE_LINKS[language]
+    guide_items = "".join(
+        f'<li><a href="guides/{slug}/index.html">{escape(label)}</a></li>'
+        for slug, label in zip(GUIDE_SLUGS, guide_labels, strict=True)
+    )
+    guides = (
+        f'<nav class="guide-links" aria-labelledby="guide-links-heading">'
+        f'<strong id="guide-links-heading">{escape(guide_title)}</strong><ul>{guide_items}</ul></nav>'
+    )
     replacements = {
         "LANG": t["html_lang"], "TITLE": t["title"], "DESCRIPTION": t["description"],
         "BRAND": t["brand"], "OFFICIAL": t["official"], "OTHER": ("zh" if language == "ru" else "ru"),
         "SWITCH": t["switch"], "EYEBROW": t["eyebrow"], "HEADING": t["heading"],
         "LEAD": t["lead"], "TOTAL": str(len(items)), "STAT_ANSWERS": t["stat_answers"],
         "LOCALE": t["locale"], "BROWSE_TITLE": t["browse_title"], "BROWSE_HINT": t["browse_hint"],
+        "NO_SCRIPT": t["no_script"], "FAQ_CATEGORIES": t["faq_categories"],
         "SEARCH_LABEL": t["search_label"], "SEARCH_PLACEHOLDER": t["search_placeholder"],
         "CLEAR": t["clear"], "RESULTS": t["results"], "OF": t["of"],
         "EMPTY": t["empty"], "DISCLAIMER_TITLE": t["disclaimer_title"], "DISCLAIMER": t["disclaimer"],
@@ -369,7 +405,7 @@ def generate_page(language: str, data: dict) -> str:
     rendered = PAGE
     for key, raw in replacements.items():
         rendered = rendered.replace("%%" + key + "%%", escape(raw, quote=True))
-    for key, raw in {"CSS": CSS, "JS": JS, "JSONLD": json_script(structured), "TABS": tabs,
+    for key, raw in {"CSS": CSS, "JS": JS, "JSONLD": json_script(structured), "TABS": tabs, "GUIDES": guides,
                      "CARDS": "\n".join(card_html(item, language, n) for n, item in enumerate(items, 1))}.items():
         rendered = rendered.replace("%%" + key + "%%", raw)
     if re.search(r"%%[A-Z_]+%%", rendered):
@@ -378,7 +414,7 @@ def generate_page(language: str, data: dict) -> str:
 
 
 def generate_homepage() -> str:
-    # Separate landing page: lets visitors choose a language instead of relying on redirects.
+    # Separate landing page with a language switch and links into the portal.
     return '''<!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Зеркало Поднебесной — Mirror of China | RUT (MIIT)</title>
@@ -391,11 +427,12 @@ def generate_homepage() -> str:
 <style>''' + CSS + '''
 .home{min-height:75vh;display:grid;place-items:center;background:radial-gradient(circle at 70% 10%,#275287,#0d2341 60%);color:#fff;padding:45px 15px}
 .home-card{width:min(720px,100%);text-align:center}.home-card h1{font-size:clamp(38px,6vw,66px);letter-spacing:-.04em;margin:10px 0}.home-card p{line-height:1.65;color:#d7e6f9}
-.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:32px 0}.choices a{display:block;text-align:left;background:#fff;color:#18375e;text-decoration:none;border-radius:16px;padding:24px;font-weight:800;font-size:20px}.choices a span{display:block;color:#647894;font-size:13px;font-weight:500;margin-top:9px}
+.home noscript a{color:#fff}.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:32px 0}.choices a{display:block;text-align:left;background:#fff;color:#18375e;text-decoration:none;border-radius:16px;padding:24px;font-weight:800;font-size:20px}.choices a span{display:block;color:#647894;font-size:13px;font-weight:500;margin-top:9px}
 @media(max-width:560px){.choices{grid-template-columns:1fr}}
 </style></head><body><main class="home"><div class="home-card"><p class="eyebrow">RUT (MIIT) · MIRROR OF CHINA</p>
 <h1>Зеркало Поднебесной</h1><p>Россия ⇄ 中国 · Информация о Российском университете транспорта для иностранных студентов.<br>俄罗斯交通大学国际学生信息指南</p>
 <nav class="choices" aria-label="Choose language"><a href="./ru/index.html" lang="ru">Русская версия<span>Поступление, документы, программы и жизнь в университете</span></a><a href="./zh/index.html" lang="zh-CN">中文版<span>俄罗斯交通大学：申请、专业、学费与校园生活</span></a></nav>
+<noscript><p><a href="./zh/index.html">中文版</a></p></noscript>
 <p style="font-size:12px">Независимый информационный проект · 独立信息项目 · <a href="https://rut-miit.ru/" style="color:#fff">Официальный сайт РУТ (МИИТ) / 大学官网 ↗</a></p>
 </div></main></body></html>'''
 
@@ -454,7 +491,7 @@ if __name__ == '__main__':
     # Keep all additional pages, navigation, and sitemap URLs when regenerating the site.
     import subprocess as _mirror_subprocess
     import sys as _mirror_sys
-    for _mirror_addon in ('build_distribution.py', 'build_guides.py', 'build_checklist.py', 'build_portal.py', 'build_tools.py', 'build_smart_tools.py', 'build_admissions_v5.py', 'apply_branding.py'):
+    for _mirror_addon in ('build_distribution.py', 'build_guides.py', 'build_checklist.py', 'build_portal.py', 'build_tools.py', 'build_admissions_v5.py', 'apply_branding.py'):
         _mirror_path = ROOT / 'scripts' / _mirror_addon
         if not _mirror_path.is_file():
             raise SystemExit(f'Нужный генератор отсутствует: {_mirror_path}')

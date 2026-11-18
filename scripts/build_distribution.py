@@ -16,11 +16,12 @@ from pathlib import Path
 from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 
+from site_config import SITE_URL as BASE
+
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / 'site'
 OUT = SITE / 'open-data'
 DIST = ROOT / 'distribution'
-BASE = 'https://banan333.github.io/mirror-of-china/'
 BEGIN = '<!-- MIRROR-OF-CHINA: OPEN-DATA-BEGIN -->'
 END = '<!-- MIRROR-OF-CHINA: OPEN-DATA-END -->'
 TODAY = date.today().isoformat()
@@ -79,7 +80,7 @@ def compact(x: dict) -> dict:
 
 def write(path: Path, data: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(data, encoding='utf-8')
+    path.write_text(data, encoding='utf-8', newline='')
 
 def pretty_json(value: object) -> str:
     return json.dumps(value, ensure_ascii=False, indent=2) + '\n'
@@ -150,6 +151,7 @@ def update_readme(count: int) -> bool:
 - [Открытые машиночитаемые данные / 开放数据]({BASE}open-data/)
 - [中文 JSON]({BASE}open-data/faq-zh.json) · [Русский JSON]({BASE}open-data/faq-ru.json)
 - [RU/ZH парные записи]({BASE}open-data/faq-pairs.json) · [JSONL]({BASE}open-data/faq-bilingual.jsonl)
+- [AtomGit 中国镜像](https://gitcode.com/smasher143/mirror-of-china)
 
 **Источник / 来源:** официальные страницы университета указаны в каждой записи. База — независимый информационный проект, **не официальный сайт РУТ**. Проверяйте действующие правила приёма, стоимость и сроки по свежим документам университета.
 
